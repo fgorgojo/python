@@ -8,7 +8,7 @@ virtual/
 .env
 .venv
 env/
-venv/
+venv/x
 ENV/
 env.bak/
 venv.bak/

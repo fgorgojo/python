@@ -1,0 +1,5 @@
+Este es una prueba de un fichero de texto que nos debería 
+de valer para poder hacer un ejercicio de conteo de todas 
+las palabras dentro de un fichero de texto. 
+Una vez usado este fichero, podríamos pasar a probar con 
+otro fichero llamado Hamlet.txt. 
