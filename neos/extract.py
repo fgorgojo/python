@@ -15,6 +15,7 @@ You'll edit this file in Task 2.
 import csv
 import json
 
+
 from models import NearEarthObject, CloseApproach
 
 
@@ -25,7 +26,15 @@ def load_neos(neo_csv_path):
     :return: A collection of `NearEarthObject`s.
     """
     # TODO: Load NEO data from the given CSV file.
-    return ()
+    with open(neo_csv_path, 'r') as infile:
+        reader = csv.DictReader(infile)
+        neos = []
+        allowed_keys = {'pdes':'designation', 'name': 'name','diameter': 'diameter', 'pha':'hazardous'}
+        for row in reader:
+            filtered_rows = {allowed_keys[k]: v for k, v in row.items() if k in allowed_keys.keys()}
+            neo = NearEarthObject(**filtered_rows)
+            neos.append(neo)    
+    return neos
 
 
 def load_approaches(cad_json_path):
@@ -35,4 +44,16 @@ def load_approaches(cad_json_path):
     :return: A collection of `CloseApproach`es.
     """
     # TODO: Load close approach data from the given JSON file.
-    return ()
+    with open(cad_json_path, 'r') as infile:
+        contents = json.load(infile)
+        data = contents['data']
+        fields = contents['fields']
+        allowed_keys = {'des':'designation', 'cd': 'time','dist': 'distance', 'v_rel':'velocity'}
+        approaches = []
+        for entry in data:
+            row_raw = {fields[i]: entry[i] for i in range(len(fields)) if fields[i] in allowed_keys.keys()}
+            row = { allowed_keys[keys]: values for keys, values in row_raw.items() }
+            approach = CloseApproach(**row)
+            approaches.append(approach) 
+
+    return approaches

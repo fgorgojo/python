@@ -16,7 +16,9 @@ iterator.
 
 You'll edit this file in Tasks 3a and 3c.
 """
+import itertools
 import operator
+import datetime
 
 
 class UnsupportedCriterionError(NotImplementedError):
@@ -68,6 +70,58 @@ class AttributeFilter:
         """
         raise UnsupportedCriterionError
 
+# Create a subclass of `AttributeFilter` for each type of filter criterion.
+class DateFilter(AttributeFilter):
+    @classmethod
+    def get(cls, approach):
+        return approach.time.date()
+
+class StartDateFilter(AttributeFilter):
+    @classmethod
+    def get(cls, approach):
+        return approach.time.date()
+
+class EndDateFilter(AttributeFilter):
+    @classmethod
+    def get(cls, approach):
+        return approach.time.date()
+
+class DistanceMinFilter(AttributeFilter):
+    @classmethod
+    def get(cls, approach):
+        return approach.distance
+
+class DistanceMaxFilter(AttributeFilter):
+    @classmethod
+    def get(cls, approach):
+        return approach.distance
+
+class VelocityMinFilter(AttributeFilter):
+    @classmethod
+    def get(cls, approach):
+        return approach.velocity
+
+class VelocityMaxFilter(AttributeFilter):
+    @classmethod
+    def get(cls, approach):
+        return approach.velocity
+
+class DiameterMinFilter(AttributeFilter):
+    @classmethod
+    def get(cls, approach):
+        return getattr(approach.neo, 'diameter', None)
+
+class DiameterMaxFilter(AttributeFilter):
+    @classmethod
+    def get(cls, approach):
+        return getattr(approach.neo, 'diameter', None)
+
+class HazardousFilter(AttributeFilter):
+    @classmethod
+    def get(cls, approach):
+        return getattr(approach.neo, 'hazardous', None)         
+
+
     def __repr__(self):
         return f"{self.__class__.__name__}(op=operator.{self.op.__name__}, value={self.value})"
 
@@ -107,7 +161,29 @@ def create_filters(date=None, start_date=None, end_date=None,
     :return: A collection of filters for use with `query`.
     """
     # TODO: Decide how you will represent your filters.
-    return ()
+    filter : AttributeFilter = []
+    if diameter_min is not None :
+        filter.append(DiameterMinFilter(operator.ge, diameter_min))
+    if diameter_max is not None:
+        filter.append(DiameterMaxFilter(operator.le, diameter_max))
+    if hazardous is not None:
+        filter.append(HazardousFilter(operator.eq, hazardous))
+    if date is not None:
+        filter.append(DateFilter(operator.eq, date))
+    if start_date is not None:
+        filter.append(StartDateFilter(operator.ge, start_date))
+    if end_date is not None:
+        filter.append(EndDateFilter(operator.le, end_date))
+    if distance_min is not None:
+        filter.append(DistanceMinFilter(operator.ge, distance_min))
+    if distance_max is not None:
+        filter.append(DistanceMaxFilter(operator.le, distance_max))
+    if velocity_min is not None:
+        filter.append(VelocityMinFilter(operator.ge, velocity_min))
+    if velocity_max is not None:
+        filter.append(VelocityMaxFilter(operator.le, velocity_max))
+
+    return filter
 
 
 def limit(iterator, n=None):
@@ -120,4 +196,6 @@ def limit(iterator, n=None):
     :yield: The first (at most) `n` values from the iterator.
     """
     # TODO: Produce at most `n` values from the given iterator.
-    return iterator
+    if n == 0 or n is None:
+        return iterator
+    return itertools.islice(iterator, 0, n)

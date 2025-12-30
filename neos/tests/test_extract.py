@@ -45,7 +45,7 @@ class TestLoadNEOs(unittest.TestCase):
     def test_neos_contain_near_earth_objects(self):
         neo = self.get_first_neo_or_none()
         self.assertIsNotNone(neo)
-        self.assertIsInstance(neo, hObject)
+        self.assertIsInstance(neo, NearEarthObject)
 
     def test_neos_contain_all_elements(self):
         self.assertEqual(len(self.neos), 4226)

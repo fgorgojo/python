@@ -26,10 +26,19 @@ def write_to_csv(results, filename):
     """
     fieldnames = ('datetime_utc', 'distance_au', 'velocity_km_s', 'designation', 'name', 'diameter_km', 'potentially_hazardous')
     # TODO: Write the results to a CSV file, following the specification in the instructions.
+    with open(filename, 'w', newline='') as outfile:
+        writer = csv.DictWriter(outfile,fieldnames=fieldnames)
+        writer.writeheader()
+        for row_raw in results:
+            neo = row_raw.neo.serialize()
+            row = row_raw.serialize()
+            for k,v in neo.items():
+                row[k]=v
+            writer.writerow(row)
 
 
 def write_to_json(results, filename):
-    """Write an iterable of `CloseApproach` objects to a JSON file.
+    """Write an iterable of CloseApproach` objects to a JSON file.
 
     The precise output specification is in `README.md`. Roughly, the output is a
     list containing dictionaries, each mapping `CloseApproach` attributes to
@@ -40,3 +49,11 @@ def write_to_json(results, filename):
     :param filename: A Path-like object pointing to where the data should be saved.
     """
     # TODO: Write the results to a JSON file, following the specification in the instructions.
+    with open(filename, 'w') as outfile:
+        outlist = []
+        for row_raw in results:
+            neo = row_raw.neo.serialize()
+            row = row_raw.serialize()
+            row['neo']=neo
+            outlist.append(row)
+        json.dump(outlist, outfile, indent=2)
