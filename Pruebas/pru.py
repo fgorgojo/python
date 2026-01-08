@@ -39,6 +39,13 @@ import numpy as np
 # print("FICHEROS")
 
 
+def larga():
+    return "Cadena muh larga a ver como se hace de u a manera"  \
+           "correcta la identaión o la tabulacion para que funciones"
+
+print(larga())
+
+
 l = [ '1', '2', '3', '', '  \n' ]
 l2 = [s for s in l if s.strip() != '']
 print(l2)

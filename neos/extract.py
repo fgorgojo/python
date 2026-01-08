@@ -1,4 +1,5 @@
-"""Extract data on near-Earth objects and close approaches from CSV and JSON files.
+"""Extract data on near-Earth objects and close approaches from CSV and JSON
+files.
 
 The `load_neos` function extracts NEO data from a CSV file, formatted as
 described in the project instructions, into a collection of `NearEarthObject`s.
@@ -7,8 +8,8 @@ The `load_approaches` function extracts close approach data from a JSON file,
 formatted as described in the project instructions, into a collection of
 `CloseApproach` objects.
 
-The main module calls these functions with the arguments provided at the command
-line, and uses the resulting collections to build an `NEODatabase`.
+The main module calls these functions with the arguments provided at the
+command line, and uses the resulting collections to build an `NEODatabase`.
 
 You'll edit this file in Task 2.
 """
@@ -22,38 +23,43 @@ from models import NearEarthObject, CloseApproach
 def load_neos(neo_csv_path):
     """Read near-Earth object information from a CSV file.
 
-    :param neo_csv_path: A path to a CSV file containing data about near-Earth objects.
+    :param neo_csv_path: A path to a CSV file containing data about near-Earth
+                         objects.
     :return: A collection of `NearEarthObject`s.
     """
-    # TODO: Load NEO data from the given CSV file.
     with open(neo_csv_path, 'r') as infile:
         reader = csv.DictReader(infile)
         neos = []
-        allowed_keys = {'pdes':'designation', 'name': 'name','diameter': 'diameter', 'pha':'hazardous'}
+        allowed_keys = {'pdes': 'designation', 'name': 'name',
+                        'diameter': 'diameter', 'pha': 'hazardous'}
         for row in reader:
-            filtered_rows = {allowed_keys[k]: v for k, v in row.items() if k in allowed_keys.keys()}
+            filtered_rows = {allowed_keys[k]: v for k, v in row.items()
+                             if k in allowed_keys.keys()}
             neo = NearEarthObject(**filtered_rows)
-            neos.append(neo)    
+            neos.append(neo)
     return neos
 
 
 def load_approaches(cad_json_path):
     """Read close approach data from a JSON file.
 
-    :param neo_csv_path: A path to a JSON file containing data about close approaches.
+    :param neo_csv_path: A path to a JSON file containing data about
+                         close approaches.
     :return: A collection of `CloseApproach`es.
     """
-    # TODO: Load close approach data from the given JSON file.
     with open(cad_json_path, 'r') as infile:
         contents = json.load(infile)
         data = contents['data']
         fields = contents['fields']
-        allowed_keys = {'des':'designation', 'cd': 'time','dist': 'distance', 'v_rel':'velocity'}
+        allowed_keys = {'des': 'designation', 'cd': 'time',
+                        'dist': 'distance', 'v_rel': 'velocity'}
         approaches = []
         for entry in data:
-            row_raw = {fields[i]: entry[i] for i in range(len(fields)) if fields[i] in allowed_keys.keys()}
-            row = { allowed_keys[keys]: values for keys, values in row_raw.items() }
+            row_raw = {fields[i]: entry[i] for i in range(len(fields))
+                       if fields[i] in allowed_keys.keys()}
+            row = {allowed_keys[keys]: values
+                   for keys, values in row_raw.items()}
             approach = CloseApproach(**row)
-            approaches.append(approach) 
+            approaches.append(approach)
 
     return approaches
