@@ -1,0 +1,11 @@
+pip
+pandas
+numpy
+pycodestyle
+pydocstyle
+Pillow
+Flask
+requests
+setuptools
+ipython
+python-docx

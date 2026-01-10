@@ -65,4 +65,40 @@ print(type(nobel_prizes[0]))
 for i in nobel_prizes:
     print(f"{i.year} - {i.category} ")  
     for j in i.laureates:
-        print(f"   {j['id']} - {j['firstname']} {j.get('surname',' - ')}")     
+        print(f"   {j['id']} - {j['firstname']} {j.get('surname',' - ')}") 
+
+# CSV FILES
+import csv
+high_wages = []
+desired_wage = 40000
+
+with open('resources/wages.csv', 'r') as infile:
+    reader = csv.reader(infile)
+    next(reader)  # Skip the header line.
+    for row in reader:
+        annual_wage = int(row[2])  # (A)
+        if annual_wage >= desired_wage:
+            high_wages.append(row)
+
+print(high_wages)
+# 'w' overwrites the file if it exists
+# newline='' prevents adding extra newlines on Windows
+with open('resources/high-wages.csv', 'w', newline='') as outfile:
+    writer = csv.writer(outfile)
+    for row in high_wages:
+        writer.writerow(row)    
+
+high_wages = []
+with open('resources/wages.csv', 'r') as infile:
+    reader = csv.DictReader(infile)
+    for elem in reader:
+        print(elem)  # <= Each of these elements are `dict`s, not `list`s!
+        if int(elem['annual_wage']) >= desired_wage:
+            high_wages.append(elem)
+
+print(high_wages)
+with open('resources/high-wages-with-header.csv', 'w', newline='') as outfile:
+    writer = csv.DictWriter(outfile, fieldnames=high_wages[0].keys())
+    writer.writeheader()
+    for elem in high_wages:
+        writer.writerow(elem)             
