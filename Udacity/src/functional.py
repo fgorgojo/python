@@ -1,4 +1,4 @@
-from wordset import english_word_small
+from .wordset import english_word_small
 
 print(type(english_word_small))  # True
 
