@@ -1,6 +1,7 @@
 import sys
 import argparse
 
+
 parser = argparse.ArgumentParser(
         description="Explore past and future close approaches of near-Earth objects."
 )
@@ -12,6 +13,8 @@ args = parser.parse_args()
 name=args.name
 city=args.city
 
-#print(f'hello, {name} from {city}')
+dic = { "clave" : "valor "}
+print(dic)
+
 
 
